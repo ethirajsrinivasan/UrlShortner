@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <%= form_for UrlShortner.new do |f| %>
+      <%= f.text_field :original_url %>
+      <%= f.submit "Short URL" %>
+      <% end %>
+      <% if @url_shortner.present? %>
+      <p>The short url for
+        <%= @url_shortner.original_url %> is
+        <%= @url_shortner.short_url %>
+      </p>
+      <% end %>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <table class="table table-striped">
+        <tr>
+          <th>
+            Original Url
+          </th>
+          <th>
+            Short Url
+          </th>
+        </tr>
+        <% @url_shortners.each do | url_shortner | %>
+        <tr>
+          <td>
+            <%= url_shortner.original_url %>
+          </td>
+          <td>
+            <%= link_to url_shortner.short_url, url_shortner.short_url  %>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+</div>
