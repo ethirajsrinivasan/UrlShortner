@@ -6,7 +6,11 @@ Rails.application.routes.draw do
     member do
       get :stats
     end
+    collection do
+      get :fetch_short_url
+    end
   end
+  post 'authenticate', to: 'authentication#authenticate'
   get "/:short_url", to: "url_shortners#show"
   root "url_shortners#index"
 end

@@ -40,6 +40,10 @@ gem "browser"
 # Pagination
 gem 'will_paginate'
 
+gem 'jwt'
+
+gem 'simple_command'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
