@@ -2,26 +2,22 @@ class UrlShortner < ApplicationRecord
 
   #Constants
   CHAR_POOL = [('a'..'z'),('A'..'Z'),(0..9)].map(&:to_a).flatten
-  
-  #Callbacks 
+
+  # Callbacks
   after_create :generate_short_url
 
-  #Relationship
+  # Relationship
   has_many :url_shortner_logs
 
-  #Pagination
+  # Pagination
   self.per_page = 10
-  
-  def generate_short_url
-    self.short_url = UrlShortner.generate_random_token
-    until UrlShortner.find_by_short_url(short_url).nil? do
-      self.short_url = UrlShortner.generate_random_token
-    end
-    self.save
-  end
 
+  # Validations
+  validates_presence_of :original_url, :sanitized_url
+
+  # Class Methods
   def self.generate_random_token
-    CHAR_POOL.sample(6).join 
+    CHAR_POOL.sample(6).join
   end
 
   def self.sanitize_url(url)
@@ -34,7 +30,16 @@ class UrlShortner < ApplicationRecord
   def self.fetch_or_create_short_url(original_url)
     sanitized_url = sanitize_url(original_url)
     url_shortner = find_by_sanitized_url(sanitized_url)
-    url_shortner.presence || UrlShortner.create(original_url: original_url,sanitized_url: sanitized_url) 
+    url_shortner.presence || UrlShortner.create(original_url: original_url,sanitized_url: sanitized_url)
+  end
+
+  # Instance Methods
+  def generate_short_url
+    self.short_url = UrlShortner.generate_random_token
+    until UrlShortner.find_by_short_url(short_url).nil? do
+      self.short_url = UrlShortner.generate_random_token
+    end
+    self.save
   end
 
   def stats
@@ -56,12 +61,12 @@ class UrlShortner < ApplicationRecord
       end
       user_stats << stats
     end
-    { "Original Url": original_url,
-      "Sanitized Url": sanitized_url,
-      "total clicks": url_shortner_logs_collection.count,
-      "total Users": user_click_stats.count,
-      "user_stats": user_stats
-        }
-    end
+    { original_url: original_url,
+      sanitized_url: sanitized_url,
+      total_clicks: url_shortner_logs_collection.count,
+      total_users: user_click_stats.count,
+      user_stats: user_stats
+    }
+  end
 
 end

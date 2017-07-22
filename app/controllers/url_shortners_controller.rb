@@ -12,6 +12,7 @@ class UrlShortnersController < ApplicationController
     @url_shortners = UrlShortner.all.paginate(:page => params[:page])
     render :index
   end
+
   def show
     @url_shortner = UrlShortner.find_by_short_url(params[:short_url])
     UrlShortnerLog.create!(user_id: current_user.id, url_shortner_id: @url_shortner.id,browser: browser.name,version: browser.version, platform: browser.platform.id)
