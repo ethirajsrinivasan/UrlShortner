@@ -8,6 +8,9 @@ class UrlShortner < ApplicationRecord
 
   #Relationship
   has_many :url_shortner_logs
+
+  #Pagination
+  self.per_page = 10
   
   def generate_short_url
     self.short_url = UrlShortner.generate_random_token
@@ -35,7 +38,8 @@ class UrlShortner < ApplicationRecord
   end
 
   def stats
-    user_click_stats = url_shortner_logs.group("user_id").count
+    url_shortner_logs_collection = url_shortner_logs
+    user_click_stats = url_shortner_logs_collection.group("user_id").count
     user_stats = []
     user_click_stats.keys.each do | user_id |
       stats = {}
@@ -43,7 +47,7 @@ class UrlShortner < ApplicationRecord
       stats["user_id"] = user_id
       stats["email"] = user.email
       stats["count"] = user_click_stats[user_id]
-      stats["click_stats"] = User.find(user_id).url_shortner_logs.map do |url_shortner_log|
+      stats["click_stats"] = user.url_shortner_logs.where(url_shortner_id: id).map do |url_shortner_log|
         {"clicked_at": url_shortner_log.created_at,
           "browser": url_shortner_log.browser,
           "version": url_shortner_log.version,
@@ -54,7 +58,10 @@ class UrlShortner < ApplicationRecord
     end
     { "Original Url": original_url,
       "Sanitized Url": sanitized_url,
-      "user_stats": user_stats }
+      "total clicks": url_shortner_logs_collection.count,
+      "total Users": user_click_stats.count,
+      "user_stats": user_stats
+        }
     end
 
 end

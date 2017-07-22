@@ -37,6 +37,9 @@ gem 'bootstrap', '~> 4.0.0.alpha3'
 # Browser
 gem "browser"
 
+# Pagination
+gem 'will_paginate'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password

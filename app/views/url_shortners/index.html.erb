@@ -1,23 +1,35 @@
 <div class="container">
-  <div class="row">
-    <div class="col-8">
-      <%= form_for UrlShortner.new do |f| %>
-      <%= f.text_field :original_url %>
-      <%= f.submit "Short URL" %>
-      <% end %>
-      <% if @url_shortner.present? %>
-      <p>The short url for
-        <%= @url_shortner.original_url %> is
-        <%= @url_shortner.short_url %>
-      </p>
-      <% end %>
+  <div class="row justify-content-center">
+    <%= form_for UrlShortner.new, html: {class: "form-inline"} do |f| %>
+    <div class="row">
+      <div class="col-8">
+        <%= f.text_field :original_url, class: "form-control", placeholder: "URL" %>
+      </div>
+      <div class="col-4">
+        <%= f.submit "Short URL", class: "btn btn-primary" %>
+      </div>
     </div>
+    <% end %>
   </div>
 </div>
 <div class="container">
-  <div class="row">
-    <div class="col-8">
-      <table class="table table-striped">
+  <div class="row justify-content-center">
+    <% if @url_shortner.present? %>
+    <div class="card">
+      <div class="card-block">
+        <p>The short url for
+          <%= @url_shortner.original_url %> is
+          <%= link_to @url_shortner.short_url, @url_shortner.short_url  %>
+        </p>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-auto">
+      <table class="table table-striped table-responsive">
         <tr>
           <th>
             Original Url
@@ -39,4 +51,6 @@
       </table>
     </div>
   </div>
-</div>
+  <div class="flickr_pagination">
+    <%= will_paginate @url_shortners, container: false %>
+  </div>

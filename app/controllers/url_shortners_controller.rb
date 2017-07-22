@@ -1,12 +1,12 @@
 class UrlShortnersController < ApplicationController
 
   def index
-    @url_shortners = UrlShortner.all
+    @url_shortners = UrlShortner.all.paginate(:page => params[:page])
   end
   
   def create
     @url_shortner = UrlShortner.fetch_or_create_short_url(params[:url_shortner][:original_url])
-    @url_shortners = UrlShortner.all
+    @url_shortners = UrlShortner.all.paginate(:page => params[:page])
     render :index
   end
 
@@ -17,13 +17,11 @@ class UrlShortnersController < ApplicationController
   end
 
   def stats
-    if request.format == 'json'
-      @url_shortner = UrlShortner.find_by(short_url: params[:id])
-      if @url_shortner.nil?
-        render json: {'error': 'Short Url Not Found'}
-      else
-        render json: JSON.pretty_generate({'data': @url_shortner.stats})
-      end
+    @url_shortner = UrlShortner.find_by(short_url: params[:id])
+    if @url_shortner.nil?
+      render json: {'error': 'Short Url Not Found'}
+    else
+      render json: JSON.pretty_generate({'data': @url_shortner.stats})
     end
   end
 
