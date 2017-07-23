@@ -65,8 +65,7 @@ class UrlShortner < ApplicationRecord
       sanitized_url: sanitized_url,
       total_clicks: url_shortner_logs_collection.count,
       total_users: user_click_stats.count,
-      user_stats: user_stats
-    }
+      user_stats: user_stats }
   end
 
 end

@@ -35,7 +35,7 @@ http://localhost:3000/url_shortners/fetch_short_url?url=yahoo.com
 ```
 To get statistics about short url
 ```sh
-http://localhost:3000/url_shortners/sAe0Lj/stats
+http://localhost:3000/url_shortners/:short_url/stats
 ```
 Note:
 Include auth token in the header as below

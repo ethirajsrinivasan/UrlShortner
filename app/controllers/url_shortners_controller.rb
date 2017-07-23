@@ -4,18 +4,22 @@ class UrlShortnersController < ApplicationController
   before_action :authenticate_request, only: [:stats,:fetch_short_url]
 
   def index
-    @url_shortners = UrlShortner.all.paginate(:page => params[:page])
+    @url_shortners = UrlShortner.all.paginate(page: params[:page])
   end
 
   def create
-    @url_shortner = UrlShortner.fetch_or_create_short_url(params[:url_shortner][:original_url])
-    @url_shortners = UrlShortner.all.paginate(:page => params[:page])
+    @url_shortner = UrlShortner.fetch_or_create_short_url(params[:url_shortner][:original_url]) if params[:url_shortner][:original_url].present?
+    @url_shortners = UrlShortner.all.paginate(page: params[:page])
     render :index
   end
 
   def show
     @url_shortner = UrlShortner.find_by_short_url(params[:short_url])
-    UrlShortnerLog.create!(user_id: current_user.id, url_shortner_id: @url_shortner.id,browser: browser.name,version: browser.version, platform: browser.platform.id)
+    UrlShortnerLog.create!(user_id: current_user.id,
+                           url_shortner_id: @url_shortner.id,
+                           browser: browser.name,
+                           version: browser.version,
+                           platform: browser.platform.id)
     redirect_to @url_shortner.sanitized_url
   end
 
@@ -30,8 +34,9 @@ class UrlShortnersController < ApplicationController
 
   def fetch_short_url
     url_shortner = UrlShortner.fetch_or_create_short_url(params[:url])
-    render json: { "original_url": url_shortner.original_url, "sanitized_url": url_shortner.sanitized_url, "short_url": root_url + url_shortner.short_url
-    }
+    render json: { "original_url": url_shortner.original_url,
+                   "sanitized_url": url_shortner.sanitized_url,
+                   "short_url": root_url + url_shortner.short_url }
   end
 
   private

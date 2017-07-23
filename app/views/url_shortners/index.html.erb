@@ -19,7 +19,7 @@
       <div class="card-block">
         <p>The short url for
           <%= @url_shortner.original_url %> is
-          <%= link_to @url_shortner.short_url, @url_shortner.short_url  %>
+          <%= link_to @url_shortner.short_url, @url_shortner.short_url, target: "_blank"  %>
         </p>
       </div>
     </div>
@@ -44,7 +44,7 @@
             <%= url_shortner.original_url %>
           </td>
           <td>
-            <%= link_to url_shortner.short_url, url_shortner.short_url  %>
+            <%= link_to url_shortner.short_url, url_shortner.short_url, target: "_blank"  %>
           </td>
         </tr>
         <% end %>
@@ -54,3 +54,4 @@
   <div class="flickr_pagination">
     <%= will_paginate @url_shortners, container: false %>
   </div>
+</div>
