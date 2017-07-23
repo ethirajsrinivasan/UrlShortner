@@ -1,24 +1,43 @@
-# README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# UrlShortner
 
-Things you may want to cover:
+UrlShortner is an rails application which gives shortened URL from the original URL.
 
-* Ruby version
+# Features
 
-* System dependencies
+UrlShorner has web front end and api service.
 
-* Configuration
+# Authentication
 
-* Database creation
+Authentication for web front end is through devise and for api service it is through JSON web token
 
-* Database initialization
+# Installation
+```sh
+git clone https://github.com/ethirajsrinivasan/UrlShortner.gito
+cd UrlShortner
+bundle install
+rake db:setup
+rake db:migrate
+rails server
+```
+UrlShortner is up and running
 
-* How to run the test suite
+# API EndPoint
 
-* Services (job queues, cache servers, search engines, etc.)
+To get authentication token
+```sh
+http://localhost:3000/authenticate?email=xxxxxxxx@gmail.com&password=xxxxxxx
+```
 
-* Deployment instructions
+To get short url
+```sh
+http://localhost:3000/url_shortners/fetch_short_url?url=yahoo.com
+```
+To get statistics about short url
+```sh
+http://localhost:3000/url_shortners/sAe0Lj/stats
+```
+Note:
+Include auth token in the header as below
 
-* ...
+Authorization: 'auth_token'
