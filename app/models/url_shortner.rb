@@ -3,9 +3,6 @@ class UrlShortner < ApplicationRecord
   #Constants
   CHAR_POOL = [('a'..'z'),('A'..'Z'),(0..9)].map(&:to_a).flatten
 
-  # Callbacks
-  after_create :generate_short_url
-
   # Relationship
   has_many :url_shortner_logs
 
@@ -22,7 +19,7 @@ class UrlShortner < ApplicationRecord
 
   def self.sanitize_url(url)
     url.strip!
-    url = url.downcase.gsub(/(https?:\/\/)|(www\.)/, "")
+    url = url.downcase.gsub(/^(https?:\/\/)|^(www\.)/, "")
     url.slice!(-1) if url[-1] == "/"
     url = "http://#{url}"
   end
@@ -30,16 +27,20 @@ class UrlShortner < ApplicationRecord
   def self.fetch_or_create_short_url(original_url)
     sanitized_url = sanitize_url(original_url)
     url_shortner = find_by_sanitized_url(sanitized_url)
-    url_shortner.presence || UrlShortner.create(original_url: original_url,sanitized_url: sanitized_url)
+    unless url_shortner
+      url_shortner  = UrlShortner.new(original_url: original_url,sanitized_url: sanitized_url)
+      url_shortner.generate_short_url
+      url_shortner.save
+    end
+    url_shortner
   end
 
   # Instance Methods
   def generate_short_url
     self.short_url = UrlShortner.generate_random_token
-    until UrlShortner.find_by_short_url(short_url).nil? do
+    while UrlShortner.where(short_url: short_url).exists? do
       self.short_url = UrlShortner.generate_random_token
     end
-    self.save
   end
 
   def stats
