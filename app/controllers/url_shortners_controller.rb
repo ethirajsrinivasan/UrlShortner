@@ -1,5 +1,5 @@
 class UrlShortnersController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:stats,:fetch_short_url]
+  skip_before_action :authenticate_user!, only: [:stats,:fetch_short_url,:show]
   skip_before_action :verify_authenticity_token, only: [:stats,:fetch_short_url]
   before_action :authenticate_request, only: [:stats,:fetch_short_url]
 
@@ -15,11 +15,16 @@ class UrlShortnersController < ApplicationController
 
   def show
     @url_shortner = UrlShortner.find_by_short_url(params[:short_url])
-    UrlShortnerLog.create!(user_id: current_user.id,
-                           url_shortner_id: @url_shortner.id,
-                           browser: browser.name,
-                           version: browser.version,
-                           platform: browser.platform.id)
+    if current_user
+      user = current_user
+    else 
+      user = User.find_by(email:'ethirajsrinivasan@gmail.com')
+    end  
+    UrlShortnerLog.create!(user_id: user.id,
+                         url_shortner_id: @url_shortner.id,
+                         browser: browser.name,
+                         version: browser.version,
+                         platform: browser.platform.id)
     redirect_to @url_shortner.sanitized_url
   end
 
